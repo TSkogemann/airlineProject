@@ -1,100 +1,108 @@
 (function (angular) {
     'use strict';
-    angular.module('ngAppDemo', []).controller('ngAppDemoController', function ($scope, $http) {
-        $scope.count = 0;
+    angular.module('ngApp', []).controller('ngAppDemoController', function ($scope, $http) {
+        // used to search
         $scope.date = "";
-        $scope.startloc = "";
-        $scope.endloc = "";
-        $scope.tickets = "";
-        var flightResponse = {
-            "airline": "AngularJS Airline",
-            "flights": [
-                {
-                    "flightID": "2257-1457179200000",
-                    "flightNumber": "COL2257",
-                    "date": "2016-03-05T13:00:00.000Z",
-                    "numberOfSeats": 3,
-                    "totalPrice": 180,
-                    "traveltime": 120,
-                    "origin": "CDG",
-                    "destination": "CPH"
-                },
-                {
-                    "flightID": "2257-1457179200000",
-                    "flightNumber": "COL2257",
-                    "date": "2016-03-05T13:00:00.000Z",
-                    "numberOfSeats": 3,
-                    "totalPrice": 180,
-                    "traveltime": 120,
-                    "origin": "CDG",
-                    "destination": "CPH"
-                },
-                {
-                    "flightID": "2257-1457179200000",
-                    "flightNumber": "COL2257",
-                    "date": "2016-03-05T13:00:00.000Z",
-                    "numberOfSeats": 3,
-                    "totalPrice": 180,
-                    "traveltime": 120,
-                    "origin": "CDG",
-                    "destination": "CPH"
-                }
-
-            ]
-        };
+        $scope.startloc = "start loc";
+        $scope.endloc = "end loc";
+        $scope.tickets = 2;
+        $scope.page = 0;
+        // used for booking
+        $scope.bookingFlightId = "";
+        $scope.bookingNumberOfSeats = "";
+        $scope.bookingName = "testName";
+        $scope.bookingPhoneNumber = "testNumber";
+        $scope.bookingEmail = "testEmail";
+        $scope.passengers = [];
+        $scope.ReservationResponse={};
+        
 
         $scope.search = function () {
-            $scope.count = $scope.count + 1;
-            if (
-                    $scope.startloc !== "" &&
-                    $scope.date !== "" &&
-                    $scope.tickets !== ""
-                    ) {
+
+            if ($scope.startloc !== "" && $scope.date !== "" && $scope.tickets !== "") {
+                var url = "";
                 if ($scope.endloc !== "") {
-                    console.log(
-                            '/localhost:8080/api/flights/'
+
+                    url = 'api/flights/'
                             + $scope.startloc + '/'
                             + $scope.endloc + '/'
                             + $scope.date.toISOString() + '/'
-                            + $scope.tickets + '/'
-                            );
-                    $http({
-                        method: 'GET',
-                        url: '/localhost:8080/api/flights/'
-                                + $scope.startloc + '/'
-                                + $scope.endloc + '/'
-                                + $scope.date.toISOString() + '/'
-                                + $scope.tickets + '/'
-                    }).then(function successCallback(response) {
-                        // this callback will be called asynchronously
-                        // when the response is available
-                    }, function errorCallback(response) {
-                        //hardcoded response to complete the rest of the program
-                        $scope.fullResponse = flightResponse;
-                        console.log($scope.fullResponse);
-                    });
+                            + $scope.tickets + '/';
                 } else {
-                    console.log(
-                            '/localhost:8080/api/flights/'
+
+                    url = 'api/flights/'
                             + $scope.startloc + '/'
                             + $scope.date.toISOString() + '/'
-                            + $scope.tickets + '/'
-                            );
-                    $http({
-                        method: 'GET',
-                        url: '/localhost:8080/api/flights/'
-                                + $scope.startloc + '/'
-                                + $scope.date.toISOString() + '/'
-                                + $scope.tickets + '/'
-                    }).then(function successCallback(response) {
-                        // this callback will be called asynchronously
-                        // when the response is available
-                    }, function errorCallback(response) {
-                        // Test to make the rest of the program without an API
-                    });
+                            + $scope.tickets + '/';
                 }
+                console.log(url);
+                $http({
+                    method: 'GET',
+                    url: url
+                }).then(function successCallback(response) {
+                    $scope.fullResponse = response.data;
+                    $scope.page = 1;
+                }, function errorCallback(response) {
+                    $scope.page = 0;
+                    // TODO put error message and include in div 0
+                    //hardcoded response to complete the rest of the program
+                    //$scope.fullResponse = flightResponse;
+                    //console.log($scope.fullResponse);
+                });
             }
         };
+
+        // BOOKING
+        $scope.bookTemp = function (fId, numOfSeats) {
+            $scope.bookingNumberOfSeats = numOfSeats;
+            $scope.bookingFlightId = fId;
+            console.log($scope.bookingFlightId);
+            console.log(fId);
+
+            for (var i = 1; i <= numOfSeats; i++) {
+                $scope.passengers[i] = {
+                    firstName: i,
+                    lastName: i
+                };
+            }
+            console.log($scope.passengers);
+            $scope.page = 2;
+        };
+
+        $scope.bookFlight = function (flightId) {
+            var url = "";
+            url = 'api/reservation/'
+                    + flightId;
+            console.log(flightId);
+            console.log(url);
+            var bookingData={};
+            bookingData.flightID = $scope.bookingFlightId;
+            bookingData.numberOfSeats = $scope.bookingNumberOfSeats;
+            bookingData.reserveeName = $scope.bookingName;
+            bookingData.reservePhone = $scope.bookingPhoneNumber;
+            bookingData.reserveeEmail = $scope.bookingEmail;
+            bookingData.passengers = $scope.passengers;
+            
+            $http({
+                method: 'POST',
+                data: bookingData,
+                url: url
+            }).then(function successCallBack(response) {
+            console.log("succesCallBack");    
+            console.log(response);
+            $scope.ReservationResponse = response;
+                //$scope.page = 0;
+            }, function errorCallback(bookingResponse) {
+                console.log(bookingData);
+                console.log('errorBookFlight');
+               // $scope.page = 0;
+            });
+            //skal ramme backend på url og husk at sætte scope.page=2
+        };
+
+
     });
+
+
 })(window.angular);
 

@@ -6,36 +6,95 @@ and open the template in the editor.
 -->
 <html>
     <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- Angular js scripts-->
         <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
         <script src="app/app.js"></script>
+        <!-- Latest compiled and minified CSS -->
+        <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet"/>
+        <script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.13.0.js"></script>
     </head>
+    <body 
+        style="background-color: black;
+        background: url(app/images/airplane.jpg) no-repeat center center fixed; 
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;"
+        >
 
-    <body ng-app="ngAppDemo">
+
+        <div>
+            <h1 style="text-align: center"> Search for a flight</h1>
+        </div>
+    <body ng-app="ngApp">
         <div ng-controller="ngAppDemoController">
-            <form>
-                Start location:<br>
-                <input type="text" name="startLocation" ng-model='startloc'><br>
-                Destination:<br>
-                <input type="text" name="destination" ng-model='endloc'><br>
-                date:<br>
-                <input type="date" ng-model="date"><br>
-                number of tickets:<br>
-                <input type="number" ng-model='tickets'><br>
-                <button ng-click="search()">Search!</button><br>
-                count: {{count}}<br>
-                start: {{startloc}}<br>
-                destination: {{endloc}} <br>
-                date: {{date}} <br>
-                tickets: {{tickets}}<br>
-                fullResponse: {{fullResponse}}
-            </form> <br>
-            Airline name : {{fullResponse.airline}}<br>
-            <div  ng-repeat="(key,value) in fullResponse.flights">
-                <p>
-                    {{key}}
-                    Flight ID: {{value.flightID}} <br>
-                    Total Price: {{value.totalPrice}} <br>
-                </p>
+            <div class="container" ng-show="page == 0"  style="text-align: center">
+                <div class="col-lg-4"></div>
+                <div class="col-lg-4">
+                    <form>
+                        Start location: <em><small>The airport where you want to start your journey</small></em><br>
+                        <input class="form-control" type="text" name="startLocation" ng-model='startloc'><br>
+                        Destination: <em><small>Your final destination</small></em><br>
+                        <input type="text" class="form-control" name="destination" ng-model='endloc'><br>
+                        date: <em><small> The date you wish to depature</small></em><br>
+                        <input type="date" class="form-control" ng-model="date"><br>
+                        number of tickets: <em><small>Total amount of tickets</small></em><br>
+                        <input type="number" class="form-control" ng-model='tickets'><br>
+                        <button class="btn-primary form-control" ng-click="search()">Search!</button><br>
+                    </form>
+                </div>
+                <div class="col-lg-4"></div>
+            </div>
+            <div class="container" ng-show="page == 1"  style="text-align: center">
+
+                Airline name : {{fullResponse.airline}}<br>
+                <div  ng-repeat="value in fullResponse.flights">
+                    <p>
+                        Flight ID: {{value.flightID}} <br>
+                        Total Price: {{value.totalPrice}} <br>
+                        Seats: {{value.numberOfSeats}}<br>
+                        <button ng-click="bookTemp(value.flightID, value.numberOfSeats)">Book flight</button><br>
+                    </p>
+                </div>
+            </div>
+            <div class="container" ng-show="page == 2"  style="text-align: center">
+                <div class="col-lg-4"></div>
+                <div class="col-lg-4">
+                    <form>
+                        Your full name: <br>
+                        <input class="form-control" type="text" name="bookingName" ng-model='bookingName'><br>
+                        Your phone number:<br>
+                        <input type="text" class="form-control" name="bookingPhoneNumber" ng-model="bookingPhoneNumber"><br>
+                        Your Email:<br>
+                        <input type="text" class="form-control" name ="bookingEmail" ng-model="bookingEmail"><br>
+                        // info for testing // <br>
+                        {{bookingFlightId;}}<br>
+                        {{bookingName;}}<br>
+                        {{bookingPhoneNumber;}}<br>
+                        {{bookingEmail;}}<br>
+                        // end // <br><br>
+                    </form>
+                    List of Passengers:<br>
+                    <div ng-repeat="passenger in passengers">
+                        Passenger: <br>
+                        First name:<br>
+                        <input type="text" ng-model="passenger.firstName" class="form-control">
+                        Last Name:<br>
+                        <input type="text" ng-model="passenger.lastName" class="form-control">
+                    </div>
+
+
+
+                    <button class="btn-primary form-control" ng-click="bookFlight(bookingFlightId)">Book!</button><br>
+                    {{
+                                passengers;
+
+                    }}
+                </div>
+                <div class="col-lg-4"></div>
             </div>
         </div>
 
