@@ -30,7 +30,7 @@ public class ApiController {
 
     String baseUrl = "http://angularairline-plaul.rhcloud.com";
 
-    @RequestMapping(value = "/flights/{startLoc}/{endLoc}/{date}/{tickets}", method = RequestMethod.GET)
+    @RequestMapping(value = "/flightinfo/{startLoc}/{endLoc}/{date}/{tickets}", method = RequestMethod.GET)
     @ResponseBody
     public FlightResponse search(
             @PathVariable("startLoc") String startLoc,
@@ -41,7 +41,7 @@ public class ApiController {
         return doSearch(startLoc, endLoc, date, ticket);
     }
 
-    @RequestMapping(value = "/flights/{startLoc}/{date}/{tickets}", method = RequestMethod.GET)
+    @RequestMapping(value = "/flightinfo/{startLoc}/{date}/{tickets}", method = RequestMethod.GET)
     @ResponseBody
     public FlightResponse search(
             @PathVariable("startLoc") String startLoc,
@@ -54,9 +54,9 @@ public class ApiController {
     private FlightResponse doSearch(String startLoc, String endLoc, String date, int ticket) throws RestClientException {
         String url;
         if (endLoc == null) {
-            url = baseUrl + "/api/flights/" + startLoc + "/" + date + "/" + ticket;
+            url = baseUrl + "/api/flightinfo/" + startLoc + "/" + date + "/" + ticket;
         } else {
-            url = baseUrl + "/api/flights/" + startLoc + "/" + endLoc + "/" + date + "/" + ticket;
+            url = baseUrl + "/api/flightinfo/" + startLoc + "/" + endLoc + "/" + date + "/" + ticket;
         }
         System.out.println("kalder remote - search");
         RestTemplate template = new RestTemplate();

@@ -3,9 +3,9 @@
     angular.module('ngApp', []).controller('ngAppDemoController', function ($scope, $http) {
         // used to search
         $scope.date = "";
-        $scope.startloc = "start loc";
-        $scope.endloc = "end loc";
-        $scope.tickets = 2;
+        $scope.startloc = "CPH";
+        $scope.endloc = "";
+        $scope.tickets = "2";
         $scope.page = 0;
         // used for booking
         $scope.bookingFlightId = "";
@@ -23,14 +23,14 @@
                 var url = "";
                 if ($scope.endloc !== "") {
 
-                    url = 'api/flights/'
+                    url = 'api/flightinfo/'
                             + $scope.startloc + '/'
                             + $scope.endloc + '/'
                             + $scope.date.toISOString() + '/'
                             + $scope.tickets + '/';
                 } else {
 
-                    url = 'api/flights/'
+                    url = 'api/flightinfo/'
                             + $scope.startloc + '/'
                             + $scope.date.toISOString() + '/'
                             + $scope.tickets + '/';
@@ -44,6 +44,7 @@
                     $scope.page = 1;
                 }, function errorCallback(response) {
                     $scope.page = 0;
+                    console.log("errorCallBack search")
                     // TODO put error message and include in div 0
                     //hardcoded response to complete the rest of the program
                     //$scope.fullResponse = flightResponse;
@@ -59,7 +60,7 @@
             console.log($scope.bookingFlightId);
             console.log(fId);
 
-            for (var i = 1; i <= numOfSeats; i++) {
+            for (var i = 0; i < numOfSeats; i++) {
                 $scope.passengers[i] = {
                     firstName: i,
                     lastName: i
@@ -88,9 +89,10 @@
                 data: bookingData,
                 url: url
             }).then(function successCallBack(response) {
-            console.log("succesCallBack");    
+            console.log("succesCallBack flight succesfully booked");    
             console.log(response);
             $scope.ReservationResponse = response;
+            $scope.page = 3;
                 //$scope.page = 0;
             }, function errorCallback(bookingResponse) {
                 console.log(bookingData);

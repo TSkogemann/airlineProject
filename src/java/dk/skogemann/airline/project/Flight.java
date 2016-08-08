@@ -24,6 +24,10 @@ public class Flight {
     String origin;
     String destination;
 
+    public Flight() {
+    }
+    
+
     public Flight(String flightID, String flightNumber, String date, int numberOfSeats, int totalPrice, int traveltime, String origin, String destination) {
         this.flightID = flightID;
         this.flightNumber = flightNumber;

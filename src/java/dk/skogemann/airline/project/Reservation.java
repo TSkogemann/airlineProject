@@ -28,6 +28,11 @@ public class Reservation {
     String reserveeEmail;
     List<Passenger> passengers;
 
+    public Reservation() {
+    }
+    
+    
+
     public String getFlightID() {
         return flightID;
     }

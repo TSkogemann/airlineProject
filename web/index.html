@@ -26,14 +26,15 @@ and open the template in the editor.
         >
 
 
-        <div>
-            <h1 style="text-align: center"> Search for a flight</h1>
-        </div>
+
     <body ng-app="ngApp">
         <div ng-controller="ngAppDemoController">
             <div class="container" ng-show="page == 0"  style="text-align: center">
                 <div class="col-lg-4"></div>
                 <div class="col-lg-4">
+                    <div>
+                        <h1 style="text-align: center"> Search for a flight</h1>
+                    </div>
                     <form>
                         Start location: <em><small>The airport where you want to start your journey</small></em><br>
                         <input class="form-control" type="text" name="startLocation" ng-model='startloc'><br>
@@ -95,6 +96,9 @@ and open the template in the editor.
                     }}
                 </div>
                 <div class="col-lg-4"></div>
+            </div>
+            <div class="container" ng-show="page == 3"  style="text-align: center">
+                Your flight has been succesfully booked
             </div>
         </div>
 
